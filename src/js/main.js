@@ -1,49 +1,128 @@
+let height = 0;
+let up = true;
 let angle = 30;
-let angle1 = 10;
+
 function setup() {
     createCanvas(windowWidth, windowHeight, WEBGL);
     img = loadImage("img/xd.gif");
-    img1 = loadImage("img/xd.jpg");
+
+
 
 }
 
 function draw() {
+    fullscreen(true);
 
-boi(img);
+    if (up) {
+        height += 5;
+        if (height === 200) {
+            up = false;
+        }
+    } else {
+        height -= 5;
+
+        if (height === -200) {
+            up = true;
+        }
+    }
+    boi(img, height);
+
 
 
 }
 
-function boi(img){
-    background(72);
+function boi(img, height) {
+    background(255, 0, 255);
+    push();
+    translate(0, -height, 0);
+    rotateY(angle);
+    rotateX(angle);
+    rotateZ(angle);
+    texture(img);
+    box(50, 50, 50, 50);
+    pop();
+
+
+    push();
+    translate(-height, 0, 0);
+    rotateY(angle);
+    rotateX(angle);
+    rotateZ(angle);
+    texture(img);
+    box(50, 50, 50, 50);
+    pop();
+
+
+    push();
+    translate(-height, -height, 0);
+    rotateY(angle);
+    rotateX(angle);
+    rotateZ(angle);
+    texture(img);
+    box(50, 50, 50, 50);
+    pop();
+
+
+    push();
+    translate(height, height, 0);
+    rotateY(angle);
+    rotateX(angle);
+    rotateZ(angle);
+    texture(img);
+    box(50, 50, 50, 50);
+    pop();
+
+    push();
+    translate(height, 0, 0);
+    rotateY(angle);
+    rotateX(angle);
+    rotateZ(angle);
+    texture(img);
+    box(50, 50, 50, 50);
+    pop();
+
+    push();
+    translate(0, height, 0);
+    rotateY(angle);
+    rotateX(angle);
+    rotateZ(angle);
+    texture(img);
+    box(50, 50, 50, 50);
+    pop();
+
+
+    push();
+    translate(height, -height, 0);
+    rotateY(angle);
+    rotateX(angle);
+    rotateZ(angle);
+    texture(img);
+    box(50, 50, 50, 50);
+    pop();
+
+    push();
+    translate(-height, height, 0);
+    rotateY(angle);
+    rotateX(angle);
+    rotateZ(angle);
+    texture(img);
+    box(50, 50, 50, 50);
+    pop();
 
     push();
 
-    rotateY(angle*0.1);
-    rotateX(angle*0.1);
-    rotateZ(angle*0.1);
+    rotateY(angle);
 
     texture(img);
-    torus(100, 100, 100, 100);
+    cylinder(100, 100, 100, 100);
+    //OWO
     pop();
 
-    angle+=0.05;
 
+    angle += 0.05;
+
+    print("fgt"); //TODO succ
 }
 
-function boi1(img1){
-    background(72);
 
-    push();
-
-    rotateY(angle*0.1);
-    rotateX(angle*0.1);
-    rotateZ(angle*0.1);
-
-    texture(img1);
-    box(100, 100, 200, 200);
-    pop();
-
-    angle+=0.05;
-}
 
