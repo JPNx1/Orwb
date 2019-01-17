@@ -6,8 +6,6 @@ function setup() {
     createCanvas(windowWidth, windowHeight, WEBGL);
     img = loadImage("img/xd.gif");
 
-
-
 }
 
 function draw() {
@@ -26,8 +24,6 @@ function draw() {
         }
     }
     boi(img, height);
-
-
 
 }
 
@@ -49,7 +45,7 @@ function boi(img, height) {
     rotateX(angle);
     rotateZ(angle);
     texture(img);
-    box(50, 50, 50, 50);
+    sphere(50, 50, 50, 50);
     pop();
 
 
@@ -114,7 +110,7 @@ function boi(img, height) {
     rotateY(angle);
 
     texture(img);
-    cylinder(100, 100, 100, 100);
+    sphere(100, 100, 100, 100);
     //OWO
     pop();
 
