@@ -1,7 +1,21 @@
 var open = false;
+console.log("ree");
+
+$("#container").click(function () {
+    if(open){
+        nav();
+    }
+});
+
+$("#btn_start").click(function () {
+    $("#welcome").fadeOut(1500);
+    console.log("hidden");
+
+
+});
 
 function nav() {
-
+    console.log("nav");
     if (!open) {
         openNav();
         open = !open;
@@ -23,3 +37,4 @@ function closeNav() {
     document.getElementById("mySidebar").style.width = "0";
     document.getElementById("main").style.marginLeft = "0";
 }
+
