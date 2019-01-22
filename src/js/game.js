@@ -6,9 +6,7 @@ function setup() {
 }
 
 function draw() {
-    print("draw");
     background(0);
-
     orwb.move();
     orwb.show1();
 }
@@ -21,14 +19,23 @@ class Orwb {
 
     move() {
         this.x = this.x + 5;
-        this.y = this.y + 5;
+
     }
 
     show1(){
-        stroke(255);
-        strokeWeight(4);
-        noFill();
-        ellipse(this.x, this.y, 24, 24)
+        fill(color(255, 212, 0));
+        ellipse(this.x, this.y, 64, 64);
+
+        fill(color(0, 0, 0));
+
+        ellipse(this.x - 11, this.y - 10, 20, 20);
+        ellipse(this.x + 11, this.y - 10, 20, 20);
+
+        fill(color(255, 255, 255));
+
+        ellipse(this.x - 5, this.y - 15, 5, 5);
+        ellipse(this.x + 15, this.y - 15, 5, 5);
+
 
     }
 }
