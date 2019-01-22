@@ -10,8 +10,6 @@ $("#container").click(function () {
 $("#btn_start").click(function () {
     $("#welcome").fadeOut(1500);
     console.log("hidden");
-
-
 });
 
 function nav() {
