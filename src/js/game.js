@@ -1,4 +1,5 @@
 let orwb;
+let gravity = 5;
 
 //setup function
 function setup() {
@@ -14,42 +15,69 @@ function setup() {
 function draw() {
     background(0);
     orwb.show1();
+    move();
+    orwb.applyGravity();
+
+}
+
+function move() {
+    if(keyIsDown(LEFT_ARROW)){
+        if(orwb.x >= 36){
+            orwb.goleft();
+        }
+
+    }
+    if(keyIsDown(RIGHT_ARROW)){
+        if(orwb.x <= window.width - 35){
+            orwb.goright();
+        }
+
+    }
+    if(keyIsDown(32)){
+        orwb.jump();
+    }
+    
 }
 
 function keyPressed() {
-    switch (keyCode) {
-        case LEFT_ARROW:
-            while (keyIsDown(LEFT_ARROW)) {
-                orwb.goleft();
-            }
-
-            break;
-        case RIGHT_ARROW:
-            while (keyIsDown(LEFT_ARROW)) {
-                orwb.goright();
-            }
-            orwb.goright();
-            break;
+    if(keyCode === 32 ){
+        //orwb.jump();
     }
+    
 }
 
 
 class Orwb {
     constructor() {
-        this.x = 100;
-        this.y = 100;
+        this.x = 0;
+        this.y = 704;
+        this.xOffset = 32;
+        this.yOffset = 32;
+        this.y = this.y - this.yOffset;
+        this.x = this.x + this.xOffset;
+        this.speed = 0;
+    }
+
+    applyGravity(){
+        if(this.y <= window.height - 35){
+            this.y = this.y + gravity;
+        }
+
     }
 
     goleft() {
-        this.x = this.x - 5;
+        this.x -= 5;
+        print("Orwb moved left" + this.x);
     }
 
     goright() {
-        this.x = this.x + 5;
+        this.x += 5;
+        print("Orwb moved right" + this.x);
     }
 
     jump() {
-
+        print("jump");
+        this.y = this.y - gravity;
     }
 
     show1() {
