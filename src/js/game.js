@@ -31,7 +31,7 @@ function setup() {
     //creates an object orwb
     orwb = new Orwb();
 
-    game.grid();
+
 
     //check which state the game has
     switch (game.state) {
@@ -55,9 +55,12 @@ function setup() {
 //draw function (repeated)
 function draw() {
     background(0);
+    game.grid();
     orwb.show1();
-    orwb.applyGravity();
+    //orwb.applyGravity();
     orwb.move();
+
+
 
     if (orwb.isJumping) {
         orwb.yVelocity += gravity;
@@ -85,18 +88,21 @@ function keyPressed() {
 class Game {
     constructor() {
         this.state = 0;
-        this.gridX = window.width/11;
-        this.gridY = window.height/11;
+        this.gridX = 11;
+        this.gridY = 11;
+        this.squareX = (width/this.gridX)-1;
+        this.squareY = (width/this.gridY)-1;
     }
 
     grid(){
-        print(this.gridX, this.gridY);
-        for (let i = 0; i < 9; i++) {
-            let p = i*game.gridX;
-            let px = i*game.gridX;
 
+        for (let rows = 0; rows < this.gridX; rows++) {
+            for (let colums = 0; colums < this.gridY; colums++) {
+                fill(255,255,255);
+                rect(rows * width/this.gridX, colums * height/this.gridY, width/this.gridX, width/this.gridX);
+
+            }
         }
-
     }
 
     welcome() {
@@ -141,12 +147,14 @@ class Orwb {
     //construction variables
     constructor() {
         //position variables
-        this.x = 0;
-        this.y = 704;
+        this.x = game.squareX*1;
+        this.y = game.squareY*11;
         this.xOffset = 32;
         this.yOffset = 32;
         this.y = this.y - this.yOffset;
         this.x = this.x + this.xOffset;
+
+        print(this.x, this.y);
 
         //variables for jumping
         this.isJumping = false;
@@ -176,7 +184,7 @@ class Orwb {
     //function to make orwb jump
     jump() {
         this.ground = this.y;
-        print("jump");
+
 
         if (this.isJumping === false) {
             this.yVelocity = -28;
@@ -189,6 +197,7 @@ class Orwb {
         //yellow base circle for body
         fill(color(255, 212, 0));
         ellipse(this.x, this.y, 64, 64);
+
 
         //black circles for eyes
         fill(color(0, 0, 0));
