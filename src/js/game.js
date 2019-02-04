@@ -31,10 +31,12 @@ function setup() {
     //creates an object orwb
     orwb = new Orwb();
 
+    game.grid();
+
     //check which state the game has
     switch (game.state) {
         case 0:
-
+            game.welcome();
             break;
         case 1:
 
@@ -44,6 +46,8 @@ function setup() {
             break;
         case 3:
 
+            break;
+        case 4:
             break;
     }
 }
@@ -81,21 +85,37 @@ function keyPressed() {
 class Game {
     constructor() {
         this.state = 0;
+        this.gridX = window.width/11;
+        this.gridY = window.height/11;
     }
 
-    start(){
+    grid(){
+        print(this.gridX, this.gridY);
+        for (let i = 0; i < 9; i++) {
+            let p = i*game.gridX;
+            let px = i*game.gridX;
+
+        }
 
     }
 
-    pause(){
+    welcome() {
 
     }
 
-    resume(){
+    start() {
 
     }
 
-    end(){
+    pause() {
+
+    }
+
+    resume() {
+
+    }
+
+    end() {
 
     }
 }
