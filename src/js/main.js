@@ -117,7 +117,7 @@ function boi(img, height) {
 
     angle += 0.05;
 
-    print("fgt"); //TODO succ
+
 }
 
 

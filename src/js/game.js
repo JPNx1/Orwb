@@ -10,7 +10,7 @@ let gravity = 2.3;
 //setup function
 function setup() {
     //creates canvas as object
-    let canvas = createCanvas(704, 704);
+    let canvas = createCanvas(705, 705);
 
     //framerate
     frameRate(60);
@@ -31,6 +31,8 @@ function setup() {
     //creates an object orwb
     orwb = new Orwb();
 
+    //ground
+    box = new Box(3, 10);
 
 
     //check which state the game has
@@ -57,9 +59,10 @@ function draw() {
     background(0);
     game.grid();
     orwb.show1();
-    //orwb.applyGravity();
+    orwb.applyGravity();
     orwb.move();
 
+    box.show();
 
 
     if (orwb.isJumping) {
@@ -90,16 +93,17 @@ class Game {
         this.state = 0;
         this.gridX = 11;
         this.gridY = 11;
-        this.squareX = (width/this.gridX)-1;
-        this.squareY = (width/this.gridY)-1;
+        this.squareX = ((width - 1) / this.gridX);
+        this.squareY = ((width - 1) / this.gridY);
     }
 
-    grid(){
+    grid() {
 
         for (let rows = 0; rows < this.gridX; rows++) {
             for (let colums = 0; colums < this.gridY; colums++) {
-                fill(255,255,255);
-                rect(rows * width/this.gridX, colums * height/this.gridY, width/this.gridX, width/this.gridX);
+                fill(255, 255, 255, 100);
+
+                rect(rows * this.squareX, colums * this.squareY, width / this.gridX, width / this.gridX);
 
             }
         }
@@ -147,14 +151,14 @@ class Orwb {
     //construction variables
     constructor() {
         //position variables
-        this.x = game.squareX*1;
-        this.y = game.squareY*11;
+        this.x = 0;
+        this.speed = 8;
+        this.y = game.squareY * 11;
         this.xOffset = 32;
         this.yOffset = 32;
         this.y = this.y - this.yOffset;
         this.x = this.x + this.xOffset;
 
-        print(this.x, this.y);
 
         //variables for jumping
         this.isJumping = false;
@@ -171,13 +175,13 @@ class Orwb {
 
     //function to change position to the left
     goleft() {
-        this.x -= 7;
+        this.x -= this.speed;
         print("Orwb moved left" + this.x);
     }
 
     //function to change position to the right
     goright() {
-        this.x += 7;
+        this.x += this.speed;
         print("Orwb moved right" + this.x);
     }
 
@@ -211,15 +215,46 @@ class Orwb {
     }
 
     move() {
+        //loads of problems with collision detection in jump
+        //todo learn how to proper collision detection and physics
         if (keyIsDown(LEFT_ARROW)) {
-            if (orwb.x >= 36) {
-                orwb.goleft();
+            if (orwb.x > 35  ) {
+                if(orwb.y > box.posY){
+                if(box.posX  + box.width < orwb.x-32 ){
+                        orwb.goleft();
+                    }
+
+                }
             }
         }
         if (keyIsDown(RIGHT_ARROW)) {
-            if (orwb.x <= window.width - 35) {
+            print(this.x + 32, this.y);
+            if (orwb.x < window.width - 33) {
                 orwb.goright();
+
             }
         }
     }
+}
+
+class Box {
+    constructor(x, y) {
+        this.width = 64;
+        this.posX = game.squareX * x;
+        this.posY = game.squareY * y;
+        this.color = color(255, 255, 255);
+        print("ground: " + x, y, this.posX, this.posY);
+    }
+
+    show() {
+        stroke(0);
+        fill(this.color);
+        rect(this.posX, this.posY, this.width, this.width);
+
+    }
+
+    returnY() {
+        return this.posY;
+    }
+
 }
