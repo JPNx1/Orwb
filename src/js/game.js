@@ -29,7 +29,7 @@ function setup() {
     endScreen = new EndScreen();
 
     //creates an object orwb
-    orwb = new Orwb();
+    orwb = new Orwb(0, 11);
 
     //ground
     box = new Box(3, 10);
@@ -58,11 +58,12 @@ function setup() {
 function draw() {
     background(0);
     game.grid();
+    box.show();
     orwb.show1();
     orwb.applyGravity();
     orwb.move();
 
-    box.show();
+
 
 
     if (orwb.isJumping) {
@@ -149,27 +150,38 @@ class EndScreen {
 //blueprint for the object ORWB(player character)
 class Orwb {
     //construction variables
-    constructor() {
+    constructor(x, y) {
         //position variables
-        this.x = 0;
         this.speed = 8;
-        this.y = game.squareY * 11;
+        this.x = game.squareX *x;
+        this.y = game.squareY * y;
+
+
+
         this.xOffset = 32;
         this.yOffset = 32;
         this.y = this.y - this.yOffset;
         this.x = this.x + this.xOffset;
+
+        //hitbox var
+        this.hitboxLength = 45;
+        this.hitboxOffset = 22.627;
+        print(this.hitboxOffset);
 
 
         //variables for jumping
         this.isJumping = false;
         this.yVelocity = 0;
         this.ground = 0;
+        this.onGround = true;
     }
 
     //applies gravity to orwb
     applyGravity() {
         if (this.y <= window.height - 35) {
-            this.y = this.y + gravity;
+            if (!this.onGround){
+                this.y = this.y + gravity;
+            }
         }
     }
 
@@ -182,6 +194,7 @@ class Orwb {
     //function to change position to the right
     goright() {
         this.x += this.speed;
+
         print("Orwb moved right" + this.x);
     }
 
@@ -199,6 +212,7 @@ class Orwb {
     //draws orwb at his relative position x and y
     show1() {
         //yellow base circle for body
+        stroke(0);
         fill(color(255, 212, 0));
         ellipse(this.x, this.y, 64, 64);
 
@@ -212,6 +226,15 @@ class Orwb {
         fill(color(255, 255, 255));
         ellipse(this.x - 5, this.y - 15, 5, 5);
         ellipse(this.x + 15, this.y - 15, 5, 5);
+
+        //hitbox
+        this.hitboxX = this.x -this.hitboxOffset;
+        this.hitboxY = this.y - this.hitboxOffset;
+
+
+        fill(color(0, 0, 0));
+        rect(this.hitboxX, this.hitboxY, this.hitboxLength, this.hitboxLength);
+
     }
 
     move() {
@@ -220,7 +243,7 @@ class Orwb {
         if (keyIsDown(LEFT_ARROW)) {
             if (orwb.x > 35  ) {
                 if(orwb.y > box.posY){
-                if(box.posX  + box.width < orwb.x-32 ){
+                if(box.posX  + box.width < orwb.hitboxX -8){
                         orwb.goleft();
                     }
 
@@ -247,7 +270,7 @@ class Box {
     }
 
     show() {
-        stroke(0);
+
         fill(this.color);
         rect(this.posX, this.posY, this.width, this.width);
 
