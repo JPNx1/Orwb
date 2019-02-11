@@ -23,6 +23,7 @@ function setup() {
 
     //creates screen objects
     game = new Game();
+    welcomeScreen = new WelcomeScreen();
     startScreen = new StartScreen();
     pauseScreen = new PauseScreen();
     gameOverScreen = new GameOverScreen();
@@ -41,21 +42,25 @@ function setup() {
             game.welcome();
             break;
         case 1:
-
+            game.start();
             break;
         case 2:
-
+            game.pause();
             break;
         case 3:
-
+            game.resume();
             break;
         case 4:
+            game.end();
             break;
     }
 }
 
 //draw function (repeated)
 function draw() {
+
+
+
     background(0);
     game.grid();
     box.show();
@@ -64,18 +69,6 @@ function draw() {
     orwb.move();
 
 
-
-
-    if (orwb.isJumping) {
-        orwb.yVelocity += gravity;
-        orwb.y += orwb.yVelocity;
-
-        if (orwb.y > orwb.ground) {
-            orwb.y = orwb.ground;
-            orwb.yVelocity = 0;
-            orwb.isJumping = false;
-        }
-    }
 }
 
 //
@@ -131,6 +124,19 @@ class Game {
     }
 }
 
+class WelcomeScreen{
+    constructor(){
+        this.img = loadImage("img/orwb_static0.png");
+        this.text1 = "Press any key to start";
+    }
+
+    show(){
+        background(color(0));
+        image(img, 0, 0);
+
+    }
+}
+
 class StartScreen {
 
 }
@@ -153,9 +159,13 @@ class Orwb {
     constructor(x, y) {
         //position variables
         this.speed = 8;
-        this.x = game.squareX *x;
+        this.x = game.squareX * x;
         this.y = game.squareY * y;
 
+        this.hitboxLeft = this.x;
+        this.hitboxRight = this.x + 64;
+        this.hitboxTop = this.y;
+        this.hitboxBottom = this.y + 64;
 
 
         this.xOffset = 32;
@@ -163,23 +173,25 @@ class Orwb {
         this.y = this.y - this.yOffset;
         this.x = this.x + this.xOffset;
 
-        //hitbox var
-        this.hitboxLength = 45;
-        this.hitboxOffset = 22.627;
-        print(this.hitboxOffset);
-
-
         //variables for jumping
         this.isJumping = false;
         this.yVelocity = 0;
         this.ground = 0;
         this.onGround = true;
+
+        //collision var
+        this.hit = false;
+    }
+
+    //checks if orwb and the box are colliding. todo chow to implement it for every single box in this game
+    detectCollision() {
+        this.hit = collideRectCircle(box.posX, box.posY, box.width, box.width, this.x, this.y, 64, 64);
     }
 
     //applies gravity to orwb
     applyGravity() {
         if (this.y <= window.height - 35) {
-            if (!this.onGround){
+            if (!this.onGround) {
                 this.y = this.y + gravity;
             }
         }
@@ -188,20 +200,16 @@ class Orwb {
     //function to change position to the left
     goleft() {
         this.x -= this.speed;
-        print("Orwb moved left" + this.x);
     }
 
     //function to change position to the right
     goright() {
         this.x += this.speed;
-
-        print("Orwb moved right" + this.x);
     }
 
     //function to make orwb jump
     jump() {
         this.ground = this.y;
-
 
         if (this.isJumping === false) {
             this.yVelocity = -28;
@@ -227,34 +235,49 @@ class Orwb {
         ellipse(this.x - 5, this.y - 15, 5, 5);
         ellipse(this.x + 15, this.y - 15, 5, 5);
 
-        //hitbox
-        this.hitboxX = this.x -this.hitboxOffset;
-        this.hitboxY = this.y - this.hitboxOffset;
-
-
-        fill(color(0, 0, 0));
-        rect(this.hitboxX, this.hitboxY, this.hitboxLength, this.hitboxLength);
-
     }
 
+    //handles the move stuff
     move() {
         //loads of problems with collision detection in jump
         //todo learn how to proper collision detection and physics
         if (keyIsDown(LEFT_ARROW)) {
-            if (orwb.x > 35  ) {
-                if(orwb.y > box.posY){
-                if(box.posX  + box.width < orwb.hitboxX -8){
-                        orwb.goleft();
-                    }
+            this.detectCollision();
 
-                }
+            if (orwb.x > 35 && !this.hit) {
+                orwb.goleft();
+            }
+
+            if (this.hit) {
+                orwb.goright();
             }
         }
-        if (keyIsDown(RIGHT_ARROW)) {
-            print(this.x + 32, this.y);
-            if (orwb.x < window.width - 33) {
-                orwb.goright();
 
+        if (keyIsDown(RIGHT_ARROW)) {
+            this.detectCollision();
+
+            if (orwb.x < window.width - 33 && !this.hit) {
+                orwb.goright();
+            }
+
+            if (this.hit) {
+                orwb.goleft();
+            }
+        }
+
+
+        //look why this isn't working how it should be working
+        if (this.isJumping) {
+            this.detectCollision();
+            if (!this.hit) {
+                this.yVelocity += gravity;
+                this.y += orwb.yVelocity;
+            }
+
+            if (this.y > this.ground) {
+                    this.y = this.ground;
+                    this.yVelocity = 0;
+                    this.isJumping = false;
             }
         }
     }
@@ -270,7 +293,6 @@ class Box {
     }
 
     show() {
-
         fill(this.color);
         rect(this.posX, this.posY, this.width, this.width);
 
@@ -279,5 +301,4 @@ class Box {
     returnY() {
         return this.posY;
     }
-
 }
